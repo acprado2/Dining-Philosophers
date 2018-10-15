@@ -1,27 +1,27 @@
 import java.util.Random;
 
-public class DiningPhilosopher 
+public class DiningPhilosopherUnstructured
 {
 	public static void main( String args[] )
 	{
-		Fork forklist[] = new Fork[5];
+		Fork forkList[] = new Fork[5];
 		
 		for ( int i = 0; i < 5; i++ )
 		{
-			forklist[i] = new Fork( i );
+			forkList[i] = new Fork( i );
 		}
 		
 		for ( int i = 0; i < 5; i++ )
 		{
 			if ( i != 4 )
 			{
-				Thread t = new Thread( new Philosopher( forklist[i], forklist[i + 1], i + 1 ) );
+				Thread t = new Thread( new Philosopher( forkList[i], forkList[i + 1], i + 1 ) );
 				t.start();
 			}
 			else
 			{
 				// Fork to the right of the last philosopher should be the first fork
-				Thread t = new Thread( new Philosopher( forklist[i], forklist[0], i + 1 ) );
+				Thread t = new Thread( new Philosopher( forkList[i], forkList[0], i + 1 ) );
 				t.start();
 			}
 		}
@@ -60,21 +60,11 @@ class Philosopher implements Runnable
 			System.out.println( name + ": attempt to acquire fork to " + ( bIsLeftHigher ? "right" : "left" ) );
 			synchronized( lower )
 			{
-				System.out.println( name + ": acquired left fork" );
-				
-				try
-				{
-					Thread.sleep( 1000 );
-				} 
-				catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
-				
+				System.out.println( name + ": acquired " + ( bIsLeftHigher ? "right" : "left" ) + " fork" );				
 				System.out.println( name + ": attempt to acquire fork to " + ( bIsLeftHigher ? "left" : "right" ) );
 				synchronized( higher )
 				{
-					System.out.println( name + ": acquired right fork" );
+					System.out.println( name + ": acquired" + ( bIsLeftHigher ? "left" : "right" ) + "fork" );
 					right.Eat( name );
 				}
 			}
