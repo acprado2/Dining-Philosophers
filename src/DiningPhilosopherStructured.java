@@ -64,7 +64,7 @@ class PhilosopherStructured implements Runnable
 				System.out.println( name + ": attempt to acquire fork to " + ( bIsLeftHigher ? "left" : "right" ) );
 				synchronized( higher )
 				{
-					System.out.println( name + ": acquired" + ( bIsLeftHigher ? "left" : "right" ) + "fork" );
+					System.out.println( name + ": acquired " + ( bIsLeftHigher ? "left" : "right" ) + " fork" );
 					right.Eat( name );
 				}
 			}
