@@ -8,7 +8,7 @@ public class DiningPhilosopher
 		
 		for ( int i = 0; i < 5; i++ )
 		{
-			forklist[i] = new Fork();
+			forklist[i] = new Fork( i );
 		}
 		
 		for ( int i = 0; i < 5; i++ )
@@ -47,15 +47,32 @@ class Philosopher implements Runnable
 		Random rand = new Random();
 		int seconds;
 		
+		// Figure out which fork is higher/lower
+		boolean bIsLeftHigher = left.GetNumber() > right.GetNumber() ? true : false;
+		
+		// Set our references
+		Fork higher = bIsLeftHigher ? left : right;
+		Fork lower = bIsLeftHigher ? right : left; 
+		
 		while( true )
 		{
-			// Philosopher will always grab the left fork first to ensure deadlocks never occur
-			System.out.println( name + ": attempt to acquire fork to left" );
-			synchronized( left )
+			// Philosopher will always grab the lower-numbered fork first to ensure deadlocks never occur
+			System.out.println( name + ": attempt to acquire fork to " + ( bIsLeftHigher ? "right" : "left" ) );
+			synchronized( lower )
 			{
 				System.out.println( name + ": acquired left fork" );
-				System.out.println( name + ": attempt to acquire fork to right" );
-				synchronized( right )
+				
+				try
+				{
+					Thread.sleep( 1000 );
+				} 
+				catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				System.out.println( name + ": attempt to acquire fork to " + ( bIsLeftHigher ? "left" : "right" ) );
+				synchronized( higher )
 				{
 					System.out.println( name + ": acquired right fork" );
 					right.Eat( name );
@@ -79,6 +96,13 @@ class Philosopher implements Runnable
 
 class Fork
 {
+	private int number;
+	
+	public Fork( int number )
+	{
+		this.number = number;
+	}
+	
 	public void Eat( String name )
 	{
 		Random rand = new Random();
@@ -94,5 +118,10 @@ class Fork
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public int GetNumber()
+	{
+		return number;
 	}
 }
